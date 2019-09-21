@@ -6,7 +6,8 @@ MSU Homework Aggregator is a python utility to grab data from homework sites mos
 Simply download and unzip this repository (or clone if you are using git). Next, navigate to the directory that tokengrab.py is situated in and run `python tokengrab.py`. It should then prompt you for your NetID and Password and pull from the relevant sites using that.
 Overall, it should look something like this:
 
-`
+```
+anurag@host:~$ python tokengrab.py
 NetID: kompalli
 Password:
 =====================WeBWork============================
@@ -45,4 +46,4 @@ Password:
 
 
 ========================================================
-`
+```
