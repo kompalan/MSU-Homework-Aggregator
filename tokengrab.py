@@ -9,63 +9,23 @@ Homework Websites
 '''
 
 import requests
-import logging
 import lxml.html
-import contextlib
-
 from lxml import etree
 
 import webwork
 
-from prettytable import PrettyTable
-from datetime import date
-
 import stdiomask
 import sys
+import time
 
 netid = input("NetID: ")
 password = stdiomask.getpass(prompt='Password: ', mask='')
 
+start_time = time.time()
 sys.stdin.flush()
 login_data = {
     "AlternateID":netid
 }
-
-#Logging requests httplib to see the http headers and data
-try:
-    from http.client import HTTPConnection # py3
-except ImportError:
-    from httplib import HTTPConnection # py2
-
-def debug_requests_on():
-    '''Switches on logging of the requests module.'''
-    HTTPConnection.debuglevel = 1
-
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-    requests_log = logging.getLogger("requests.packages.urllib3")
-    requests_log.setLevel(logging.DEBUG)
-    requests_log.propagate = True
-
-def debug_requests_off():
-    '''Switches off logging of the requests module, might be some side-effects'''
-    HTTPConnection.debuglevel = 0
-
-    root_logger = logging.getLogger()
-    root_logger.setLevel(logging.WARNING)
-    root_logger.handlers = []
-    requests_log = logging.getLogger("requests.packages.urllib3")
-    requests_log.setLevel(logging.WARNING)
-    requests_log.propagate = False
-
-@contextlib.contextmanager
-def debug_requests():
-    '''Use with 'with'!'''
-    debug_requests_on()
-    yield
-    debug_requests_off()
-
-debug_requests_off()
 
 with requests.Session() as sess:
     loginpage = sess.get('http://login.msu.edu')
@@ -80,36 +40,18 @@ with requests.Session() as sess:
     authenticated = sess.post('https://login.msu.edu/Login', data=login_data)
 
     #Call webwork script to get webwork data
+    print("Grabbing WebWorK Data...")
     workList = webwork.getWebworkPracticeTables(sess)
-    learning_sets_list = workList[0]
-    assessing_sets_list = workList[1]
-
-    x = PrettyTable()
-    x.field_names = ["Learning Set Name", "Due Date"]
+    learning_table = workList[2]
+    assessing_table = workList[3]
+    
     print('=====================WeBWork============================')
-    for l in learning_sets_list:
-        if((l[1]-date.today()).days <= 3):
-            x.add_row([l[0], "(!!!) "+str(l[1])])
-        else:
-            x.add_row([l[0], str(l[1])])
-    x.align["Due Date"] = "r"
-    print(x)
-
-    y = PrettyTable()
-    y.field_names = ["Assessing Set Name", "Due Date"]
-
-    for a in assessing_sets_list:
-        if((a[1]-date.today()).days <= 3):
-            y.add_row([a[0], "(!!!) "+str(a[1])])
-        else:
-            y.add_row([a[0], str(a[1])])
+    print(learning_table)
     print("\n")
-    y.align["Due Date"] = "r"
-    print(y)
-    print("\n")
+    print(assessing_table)
     print("========================================================")
     #Call D2L Script to get D2L Data
 
 
     #Call TopHat Script to get TopHat Data (NOT Sentinel Single Sign On)
-    
+    print("--- %s seconds ---" % (time.time() - start_time))
