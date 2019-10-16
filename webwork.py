@@ -23,7 +23,7 @@ def getWebworkPracticeTables(sess):
     homework_sets = doc.xpath('//*[@id="hws0"]/div/table/tr')
     learning_sets = []
     try:
-        homework_sets.pop(0)
+        homework_sets.pop(0) #Remove Table Heading
         for h in homework_sets:
             h_children = h.getchildren()
             assignment_data = []
@@ -35,7 +35,7 @@ def getWebworkPracticeTables(sess):
                     #assignment_data.append(text_content)
                     match = re.search('\d{2}\/\d{2}\/\d{4}', text_content)
                     assignment_data.append(datetime.datetime.strptime(match.group(), '%m/%d/%Y').date())
-                learning_sets.append(assignment_data)
+                #learning_sets.append(assignment_data)
                 #print(assignment_data, end=" ")
     except IndexError:
         print("I'm not seeing any homework sets on WebWork For You...")
@@ -72,8 +72,8 @@ def getWebworkPracticeTables(sess):
                 x.add_row([l[0], "(!!!) "+str(l[1])])
             else:
                 x.add_row([l[0], str(l[1])])
-        else:
-            x.add_row([l[0], str(l[1])])
+##        else:
+##            x.add_row([l[0], str(l[1])])
     x.align["Due Date"] = "r"
 
     y = PrettyTable()
@@ -85,8 +85,8 @@ def getWebworkPracticeTables(sess):
                 y.add_row([a[0], "(!!!) "+str(a[1])])
             else:
                 y.add_row([a[0], str(a[1])])
-        else:
-            y.add_row([a[0], str(a[1])])
+##        else:
+##            y.add_row([a[0], str(a[1])])
     
     y.align["Due Date"] = "r"
     

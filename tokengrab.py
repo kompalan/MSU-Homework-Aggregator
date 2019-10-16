@@ -50,6 +50,10 @@ with requests.Session() as sess:
     print("\n")
     print(assessing_table)
     print("========================================================")
+    sess.close()
+    
+    #MasteringPhysics
+
     #Call D2L Script to get D2L Data
 
 
