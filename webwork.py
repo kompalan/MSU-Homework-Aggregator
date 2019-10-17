@@ -35,7 +35,7 @@ def getWebworkPracticeTables(sess):
                     #assignment_data.append(text_content)
                     match = re.search('\d{2}\/\d{2}\/\d{4}', text_content)
                     assignment_data.append(datetime.datetime.strptime(match.group(), '%m/%d/%Y').date())
-                #learning_sets.append(assignment_data)
+                learning_sets.append(assignment_data)
                 #print(assignment_data, end=" ")
     except IndexError:
         print("I'm not seeing any homework sets on WebWork For You...")
